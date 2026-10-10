@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hello, World.</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #0b0809;
+  color: #eee;
+  font-family: Georgia, serif;
+  transition: background 1s;
+}
+
+#hello {
+  position: absolute;
+  font-size: clamp(50px, 10vw, 130px);
+  font-weight: normal;
+  letter-spacing: -5px;
+  text-shadow: 0 0 30px #7d2638;
+  transition: transform .15s;
+  user-select: none;
+}
+
+.controls {
+  position: fixed;
+  z-index: 10;
+  bottom: 35px;
+  left: 35px;
+  font-family: Arial, sans-serif;
+  letter-spacing: 2px;
+}
+
+button {
+  padding: 14px 22px;
+  background: transparent;
+  color: #eee;
+  border: 1px solid #eee;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: .3s;
+}
+
+button:hover {
+  background: #eee;
+  color: #0b0809;
+}
+
+.particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  background: #9e3047;
+  border-radius: 50%;
+  animation: drift 5s infinite alternate ease-in-out;
+}
+
+@keyframes drift {
+  to { transform: translate(40px, -60px); opacity: .1; }
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="hello">HELLO, WORLD.</h1>
+
+<div class="controls">
+  <button onclick="changeMood()">ENTER THE VOID</button>
+</div>
+
+<script>
+const text = document.getElementById("hello");
+let x = 100, y = 150, dx = 2.2, dy = 1.7;
+let colors = ["#0b0809", "#160b10", "#211016", "#080d12"];
+let mood = 0;
+
+for (let i = 0; i < 35; i++) {
+  let p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "vw";
+  p.style.top = Math.random() * 100 + "vh";
+  p.style.animationDelay = Math.random() * 5 + "s";
+  document.body.appendChild(p);
+}
+
+function bounce() {
+  x += dx; y += dy;
+  if (x <= 0 || x + text.offsetWidth >= innerWidth) dx *= -1;
+  if (y <= 0 || y + text.offsetHeight >= innerHeight) dy *= -1;
+  text.style.left = x + "px";
+  text.style.top = y + "px";
+  requestAnimationFrame(bounce);
+}
+
+document.addEventListener("mousemove", e => {
+  let rx = (e.clientY / innerHeight - .5) * 8;
+  let ry = (e.clientX / innerWidth - .5) * -8;
+  text.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+});
+
+function changeMood() {
+  mood = (mood + 1) % colors.length;
+  document.body.style.background = colors[mood];
+  text.textContent = mood === 3 ? "WELCOME, STRANGER." : "HELLO, WORLD.";
+}
+
+bounce();
+</script>
+
+</body>
+</html>
